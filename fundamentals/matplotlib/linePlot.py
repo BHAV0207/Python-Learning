@@ -1,6 +1,4 @@
 import matplotlib.pyplot as plt
-import seaborn as sns
-import pandas as pd
 
 days =[1 ,2,3,4,5,6,7]
 temp =[30,22,34,26 ,40 ,40,20]

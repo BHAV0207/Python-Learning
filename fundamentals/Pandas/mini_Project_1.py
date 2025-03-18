@@ -14,6 +14,7 @@ total_passangers = len(data)
 total_survivors = data["Survived"].sum()
 survivor_percentage = (total_survivors/ total_passangers)*100
 
+print(data)
 print(missing_values)
 print(mean_age_by_sex)
 print(mean_age)
