@@ -1,9 +1,11 @@
 from fastapi import FastAPI , HTTPException
-from models import ToDo
+from models import ToDo , ToDoCreate , ToDoUpdate
+from itertools import count
 
 
 app = FastAPI()
 
+id_counter = count(1)
 ToDo_db = []
 
 @app.get('/')
@@ -19,17 +21,23 @@ def getById(id : int):
   for todo in ToDo_db:
     if todo.id == id:
       return todo
-  
   raise HTTPException(status_code=404 , detail="Todo not found")
 
 @app.post('/todo')
-def postToDo(todo : ToDo):
-  for existing in ToDo_db:
-    if(existing.id == todo.id):
-      raise HTTPException(status_code=400 , detail="Todo already Exist")
-  
-  ToDo_db.append(todo)
-  return {"message": "Todo created", "todo": todo}
+def postToDo(todo : ToDoCreate):
+  new_todo = ToDo(id = next(id_counter) , **todo.dict())
+  ToDo_db.append(new_todo)
+  return {"message": "Todo created", "todo": new_todo}
+
+
+@app.patch('/todo/{id}/completed')
+def completedTodo(id : int):
+  for todo in ToDo_db:
+    if(todo.id == id):
+      todo.completed = True
+      return {"message" : "todo marked as completed" , "todo":todo}
+  raise HTTPException(status_code=404, detail="Todo not found")
+
       
 @app.put('/todo/{id}')
 def updateTodo(id : int , updated_todo :ToDo):
